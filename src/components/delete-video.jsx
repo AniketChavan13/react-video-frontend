@@ -1,54 +1,69 @@
-import { useParams, Link, useNavigate } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+export function DeleteVideo() {
+  const params = useParams();
+  const navigate = useNavigate();
 
+  const [video, setVideo] = useState(null);
 
-export function DeleteVideo(){
+  function GetVideo() {
+    axios.get(`${process.env.REACT_APP_API_URL}/video/${params.id}`)
+      .then(response => {
+        setVideo(response.data[0]); // Assuming response is an array
+      });
+  }
 
-    let params = useParams();
-    let navigate =useNavigate();
+  useEffect(() => {
+    GetVideo();
+  }, []);
 
-    const[videos, setVideos] = useState([{VideoId:0,Title:'', Url:'', Likes:'', Dislikes:'', Views:0, CategoryId:0}])
+  function handleDeleteClick() {
+    axios.delete(`${process.env.REACT_APP_API_URL}/${params.id}`)
+      .then(() => {
+        alert('Deleted Successfully');
+        navigate('/admin-dash');
+      });
+  }
 
-    function GetVideo(){
-        axios.get(`http://127.0.0.1:5000/video/${params.id}`)
-        .then(response=>{
-            setVideos(response.data);
-        } )
-    }
+  return (
+    <div className="container py-5">
+      <h2 className="text-center text-light mb-4">🗑️ Delete Video</h2>
 
-    useEffect(()=>{
-        GetVideo();
-    },[])
+      {video ? (
+        <div className="card mx-auto shadow-lg bg-dark text-light" style={{ maxWidth: '600px' }}>
+          <div className="card-header text-center bg-danger text-white">
+            <h4>Are you sure you want to delete this video?</h4>
+          </div>
 
-    function handleDeleteClick(){
-        axios.delete(`http://127.0.0.1:5000/delete-video/${params.id}`)
-        .then(()=>{
-            alert('Delete Successfully');
-            navigate('/admin-dash');
+          <div className="card-body">
+            <h5 className="mb-3">{video.Title}</h5>
+            {video.Url ? (
+              <iframe
+                width="100%"
+                height="300"
+                src={video.Url}
+                title={video.Title}
+                className="rounded border"
+              ></iframe>
+            ) : (
+              <p className="text-danger">No preview available</p>
+            )}
+          </div>
 
-
-        })
-    }
-    
-    return(
-        <div className="container-fluid"style={{height:'100vh'}}>
-            <h2 className="text-white"> Delete Video </h2>
-            <div className="card">
-                <div className="card w-50">
-                    <div className="card-header">
-                        <h4>{videos[0].Title}</h4>
-                    </div>
-                    <div className="card-body">
-                        <iframe width="100%" height="300" src={videos[0].Url}></iframe>
-                    </div>
-                    <div className="card-footer text-center">
-                        <button onClick={handleDeleteClick } className="btn btn-danger me-2">Yes</button>
-                        <Link className="btn btn-warning" to="/admin-dash">Cancel</Link>
-                    </div>
-                </div>
-            </div>
+          <div className="card-footer d-flex justify-content-center gap-3">
+            <button onClick={handleDeleteClick} className="btn btn-danger">
+              <i className="bi bi-trash me-1"></i> Yes, Delete
+            </button>
+            <Link to="/admin-dash" className="btn btn-secondary">
+              <i className="bi bi-x-circle me-1"></i> Cancel
+            </Link>
+          </div>
         </div>
-    )
+      ) : (
+        <div className="text-center text-muted">Loading video details...</div>
+      )}
+    </div>
+  );
 }

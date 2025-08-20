@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import videoSlicers from "../slicers/video-slicer";
+import videoReducer from "../slicers/video-slicer";
 
-export default configureStore({
+const store = configureStore({
+  reducer: {
+    video: videoReducer, // <-- this name must match useSelector path
+  },
+});
 
-    reducer:{
-        store:videoSlicers
-    }
-})
+export default store;
+
+

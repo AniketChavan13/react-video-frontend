@@ -1,58 +1,80 @@
-
-
 import axios from "axios";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+export function AdminDashboard() {
+  const [videos, setVideos] = useState([]);
 
-export function AdminDashboard(){
+  function LoadVideos() {
+    axios.get(`${process.env.REACT_APP_API_URL}/videos`)
+      .then(response => {
+        setVideos(response.data);
+      });
+  }
 
-    const [videos, setVideos ] = useState([{VideoId:0,Title:'', Url:'', Likes:'', Dislikes:'', Views:0, CategoryId:0}]);
+  useEffect(() => {
+    LoadVideos();
+  }, []);
 
-    function LoadVideos(){
-        axios.get(`http://127.0.0.1:5000/videos`)
-        .then(response=>{
-            setVideos(response.data);
-        })
-    }
+  return (
+    <div className="container py-5">
+      <h3 className="text-center text-light mb-4">📊 Admin Dashboard</h3>
 
-    useEffect(()=>{
-        LoadVideos();
-    },[])
+      <div className="d-flex justify-content-center mb-4 gap-3">
+        <Link to="/add-video" className="btn btn-primary">
+          <i className="bi bi-camera-video me-1"></i> Add Video
+        </Link>
+        <Link to="/dashboard" className="btn btn-warning text-dark">
+          <i className="bi bi-person-fill me-1"></i> User Dashboard
+        </Link>
+      </div>
 
-    return(
-        <div className="container-fluid" style={{height:'100vh'}}>
-            <h3 className="text-white">Admin Dashboard</h3>
-            <div>
-                <Link to="/add-video" className="btn my-2 btn-primary bi bi-camera-video"> Add Video</Link>
-                <Link to="/user-dash" className="btn mx-2 btn-warning bi bi-person-fill">User Dashboard</Link>
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Preview</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            videos.map(video=>
-
-                                <tr key={video.VideoId}>
-                                    <td>{video.Title}</td>
-                                    <td>
-                                        <iframe src={video.Url} width="200" height="100"></iframe>
-                                    </td>
-                                    <td>
-                                        <Link to={`/edit-video/${video.VideoId}`} className="btn btn-warning bi bi-pen">Edit</Link>
-                                        <Link to={`/delete-video/${video.VideoId}`} className="btn mx-2 btn-danger bi bi-trash">Delete</Link>
-                                    </td>
-                                </tr>
-                            )
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    )
+      <div className="table-responsive bg-dark p-3 rounded shadow">
+        <table className="table table-dark table-hover table-bordered align-middle">
+          <thead className="table-light text-center">
+            <tr>
+              <th>Title</th>
+              <th>Preview</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {videos.length === 0 ? (
+              <tr>
+                <td colSpan="3" className="text-center text-muted">No videos available</td>
+              </tr>
+            ) : (
+              videos.map(video => (
+                <tr key={video.VideoId}>
+                  <td>{video.Title}</td>
+                  <td>
+                    {video.Url ? (
+                      <iframe
+                        src={video.Url}
+                        width="200"
+                        height="100"
+                        title={video.Title}
+                        className="border rounded"
+                      ></iframe>
+                    ) : (
+                      <span className="text-danger">No preview</span>
+                    )}
+                  </td>
+                  <td className="text-center">
+                    <Link to={`/edit-video/${video.VideoId}`} className="btn btn-sm btn-outline-warning me-2">
+                      <i className="bi bi-pencil-square me-1"></i> Edit
+                    </Link>
+                    <Link to={`/delete-video/${video.VideoId}`} className="btn btn-sm btn-outline-danger">
+                      <i className="bi bi-trash me-1"></i> Delete
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
+
