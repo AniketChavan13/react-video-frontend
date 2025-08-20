@@ -26,11 +26,10 @@
     "yup": "^1.4.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+  "start": "webpack serve --mode development --open",
+  "build": "webpack --mode production"
+}
+
   "eslintConfig": {
     "extends": [
       "react-app",
