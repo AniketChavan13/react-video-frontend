@@ -3,12 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@reduxjs/toolkit": "^2.2.8",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "ajv-keywords": "^3.5.2",
     "axios": "^1.11.0",
     "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.13.1",
@@ -25,17 +20,6 @@
     "web-vitals": "^5.1.0",
     "yup": "^1.7.0"
   },
-  "scripts": {
-    "start": "webpack serve --mode development --open",
-    "build": "webpack --mode production"
-  },
-  "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
-  },
-  "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
-  },
   "devDependencies": {
     "@babel/core": "^7.28.3",
     "@babel/preset-env": "^7.28.3",
@@ -48,5 +32,27 @@
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
+  },
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
